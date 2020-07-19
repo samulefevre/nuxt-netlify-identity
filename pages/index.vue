@@ -26,8 +26,6 @@
 import netlifyIdentity from 'netlify-identity-widget'
 import { mapActions, mapState } from 'vuex'
 
-netlifyIdentity.init()
-
 export default {
 
   computed: mapState({

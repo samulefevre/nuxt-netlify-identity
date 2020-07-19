@@ -24,8 +24,6 @@
 import netlifyIdentity from 'netlify-identity-widget'
 import { mapActions } from 'vuex'
 
-netlifyIdentity.init()
-
 export default {
   methods: {
     ...mapActions({

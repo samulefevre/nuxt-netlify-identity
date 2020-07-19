@@ -1,6 +1,8 @@
 import netlifyIdentity from 'netlify-identity-widget'
 
-netlifyIdentity.init()
+netlifyIdentity.init({
+  APIUrl: 'https://mongodb-graphql.netlify.app/.netlify/identity'// Absolute url to endpoint.  ONLY USE IN SPECIAL CASES!
+})
 const currentUser = netlifyIdentity.currentUser()
 
 export const state = () => ({
