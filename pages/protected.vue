@@ -1,18 +1,18 @@
 <template>
-  <div class="container">
-    <div>
-      <h1 class="title">
+  <div class="flex content-center flex-wrap  h-screen items-center">
+    <div class="m-auto">
+      <h1 class="text-3xl text-center">
         Protected Page
       </h1>
-      <h2 class="subtitle">
+      <h2 class="mt-4">
         My <strong><u>protected</u></strong> Nuxt.js project page
       </h2>
-      <div class="links">
-        <nuxt-link to="/" class="button--green">
-          Home
+      <div class="mt-4">
+        <nuxt-link to="/" class="">
+          <a>Home
           </a>
         </nuxt-link>
-        <div class="button--grey" @click="triggerNetlifyIdentityAction('logout')">
+        <div class="" @click="triggerNetlifyIdentityAction('logout')">
           Logout
         </div>
       </div>
@@ -50,33 +50,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-.links {
-  padding-top: 15px;
-}
-</style>
