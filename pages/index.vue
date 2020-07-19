@@ -5,14 +5,14 @@
         nuxt-netlify-identity
       </h1>
     </div>
-    <div v-if="isLoggedIn" class="mb-10">
-      {{ this.$store.state.user.currentUser.user_metadata.full_name }}
+    <div v-if="user" class="mb-10">
+      {{ user.user_metadata.full_name }}
     </div>
     <div class="links">
-      <button v-if="isLoggedIn" class="border-gray-400 border-2 p-1" @click="triggerNetlifyIdentityAction('logout')">
+      <button v-if="user" class="border-gray-400 border-2 p-1" @click="logout()">
         Logout
       </button>
-      <button v-else class="border-gray-400 border-2 p-1" @click="triggerNetlifyIdentityAction('login')">
+      <button v-else class="border-gray-400 border-2 p-1" @click="login()">
         Login
       </button>
       <nuxt-link to="/protected" class="block">
@@ -23,31 +23,21 @@
 </template>
 
 <script>
-import netlifyIdentity from 'netlify-identity-widget'
-import { mapActions, mapState } from 'vuex'
+import { computed } from '@vue/composition-api'
+import useAuth from '~/components/use-auth'
+import useLogin from '~/components/use-login'
 
 export default {
 
-  computed: mapState({
-    isLoggedIn: state => state.user.currentUser
-  }),
-  methods: {
-    ...mapActions({
-      setUser: 'user/setUser'
-    }),
-
-    triggerNetlifyIdentityAction (action) {
-      if (action === 'login' || action === 'signup') {
-        netlifyIdentity.open(action)
-        netlifyIdentity.on(action, (user) => {
-          this.setUser(user)
-          netlifyIdentity.close()
-        })
-      } else if (action === 'logout') {
-        this.setUser(null)
-        netlifyIdentity.logout()
-        this.$router.push('/')
-      }
+  setup () {
+    const { user, loading, error } = useAuth()
+    const loginState = useLogin()
+    return {
+      user,
+      loading,
+      error: computed(() => (loginState.error || error).value),
+      logout: loginState.logout,
+      login: loginState.login
     }
   }
 }

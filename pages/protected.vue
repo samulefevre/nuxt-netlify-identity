@@ -7,12 +7,15 @@
       <h2 class="mt-4">
         My <strong><u>protected</u></strong> Nuxt.js project page
       </h2>
+      <p v-if="user">
+        Logged as {{ user.user_metadata.full_name }}
+      </p>
       <div class="mt-4">
         <nuxt-link to="/" class="">
           <a>Home
           </a>
         </nuxt-link>
-        <div class="" @click="triggerNetlifyIdentityAction('logout')">
+        <div class="" @click="logout()">
           Logout
         </div>
       </div>
@@ -21,32 +24,35 @@
 </template>
 
 <script>
-import netlifyIdentity from 'netlify-identity-widget'
-import { mapActions } from 'vuex'
+import { computed } from '@vue/composition-api'
+import useAuth from '~/components/use-auth'
+import useLogin from '~/components/use-login'
 
 export default {
-  methods: {
-    ...mapActions({
-      setUser: 'user/setUser'
-    }),
-    triggerNetlifyIdentityAction (action) {
-      if (action === 'login' || action === 'signup') {
-        netlifyIdentity.open(action)
-        netlifyIdentity.on(action, (user) => {
-          this.setUser(user)
-          netlifyIdentity.close()
-        })
-      } else if (action === 'logout') {
-        this.setUser(null)
-        netlifyIdentity.logout()
+  setup (_, ctx) {
+    const { user, loading, error } = useAuth()
+    const loginState = useLogin()
+
+    return {
+      user,
+      loading,
+      error: computed(() => (loginState.error || error).value),
+      logout: loginState.logout,
+      login: loginState.login
+    }
+  },
+  watch: {
+    user (val) {
+      if (!val) {
         this.$router.push('/')
       }
     }
   },
-  middleware ({ store, redirect }) {
-    if (!store.state.user.currentUser) {
-      return redirect('/')
+  mounted () {
+    if (!this.user) {
+      this.$router.push('/')
     }
   }
+
 }
 </script>
