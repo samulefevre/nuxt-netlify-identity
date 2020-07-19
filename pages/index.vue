@@ -1,78 +1,56 @@
 <template>
-  <div class="container">
+  <div class="p-16">
     <div>
-      <Logo />
-      <h1 class="title">
+      <h1 class="text-center mt-4 font-bold text-2xl">
         nuxt-netlify-identity
       </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+    </div>
+    <div v-if="isLoggedIn" class="mb-10">
+      {{ this.$store.state.user.currentUser.user_metadata.full_name }}
+    </div>
+    <div class="links">
+      <button v-if="isLoggedIn" class="border-gray-400 border-2 p-1" @click="triggerNetlifyIdentityAction('logout')">
+        Logout
+      </button>
+      <button v-else class="border-gray-400 border-2 p-1" @click="triggerNetlifyIdentityAction('login')">
+        Login
+      </button>
+      <nuxt-link to="/protected" class="block">
+        Protected Page
+      </nuxt-link>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import netlifyIdentity from 'netlify-identity-widget'
+import { mapActions, mapState } from 'vuex'
+
+netlifyIdentity.init()
+
+export default {
+
+  computed: mapState({
+    isLoggedIn: state => state.user.currentUser
+  }),
+  methods: {
+    ...mapActions({
+      setUser: 'user/setUser'
+    }),
+
+    triggerNetlifyIdentityAction (action) {
+      if (action === 'login' || action === 'signup') {
+        netlifyIdentity.open(action)
+        netlifyIdentity.on(action, (user) => {
+          this.setUser(user)
+          netlifyIdentity.close()
+        })
+      } else if (action === 'logout') {
+        this.setUser(null)
+        netlifyIdentity.logout()
+        this.$router.push('/')
+      }
+    }
+  }
+}
 </script>
-
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>
