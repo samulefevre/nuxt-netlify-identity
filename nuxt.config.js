@@ -59,7 +59,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
-    '@nuxt/content'
+    '@nuxt/content',
+    '@nuxtjs/apollo'
   ],
   /*
   ** Axios module configuration
@@ -76,5 +77,12 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+  },
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'https://mongodb-graphql.netlify.app/.netlify/functions/apollo-graphql'
+      }
+    }
   }
 }
