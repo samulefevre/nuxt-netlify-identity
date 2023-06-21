@@ -20,7 +20,7 @@
     "graphql": "^15.3.0",
     "graphql-tag": "^2.10.4",
     "netlify-identity-widget": "^1.8.0",
-    "nuxt": "^2.13.0"
+    "nuxt": "^3.4.3"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.0.0",
